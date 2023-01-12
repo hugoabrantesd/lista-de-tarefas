@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//PT" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Lista de Tarefas</title>
+		
+		<style>
+		    body .ui-panelgrid .ui-panelgrid-cell {
+		            background-color: transparent;
+		        }
+	
+		        .heading-row {
+		            background-color: var(--surface-c);
+		            font-weight: bold;
+		        }
+		</style>
+	</h:head>
+
+	<h:body>
+				
+		<h:form id="formCadastro">
+			 
+			<div class="card" align="center">
+			<p:messages id="msgs"/>
+			
+			    <p:panelGrid columns="2"
+			                 columnClasses="ui-grid-col-2"
+			                 layout="grid"
+			                 styleClass="ui-panelgrid-blank ui-fluid"
+			                 style="border:0px none; margin-rigth: 0;">
+			                 
+					<p:row styleClass="heading-row">
+			            #{TarefaBean.modoEdicao ? 'Editar tarefa' : 'Cadastrar tarefa'}
+			        </p:row>
+			        
+	        		<p:outputLabel value="Título: " for="titulo"/>
+					<p:inputText value="#{TarefaBean.tarefa.titulo}" id="titulo" required="true"/>
+					
+		            <p:outputLabel for="descricao" value="Descrição: "/>
+					<p:inputTextarea value="#{TarefaBean.tarefa.descricao}" id="descricao" required="true" 
+						rows="10" 
+						cols="500"
+						maxlength="5000"
+	                    autoResize="false">
+                    </p:inputTextarea>
+			
+					<p:row>
+		                
+		                <p:outputLabel value="Responsável: * "/>
+						<p:selectOneMenu value="#{TarefaBean.idResponsavelSelecionado}">
+							<f:selectItems
+								id="responsavel"
+								value="#{TarefaBean.responsaveis}"
+								var="resp"
+								itemLabel="#{resp.nome}"
+								itemValue="#{resp.id}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Prioridade: * " for="prioridade"/>
+						<p:selectOneMenu id="prioridade" value="#{TarefaBean.tarefa.prioridadeEnum}" >
+			                 <f:selectItems
+				                 value="#{TarefaBean.prioridades}"
+				                 var="priori"
+				                 itemLabel="#{priori.value}" 
+				                 itemValue="#{priori}"/>
+			             </p:selectOneMenu>
+		                
+			        </p:row>
+			        
+			        <p:outputLabel for="data" value="Deadline: "/>
+	               	<p:datePicker id="data" value="#{TarefaBean.tarefa.deadline}" locale="br" required="true"/>
+			        
+	    		</p:panelGrid>
+			</div>
+			
+			
+			<div align="center">
+				<p:commandButton 
+				styleClass="ui-button-success" 
+				update="formCadastro" 
+				id="buttonCadastro" 
+				value="#{TarefaBean.modoEdicao ? 'Salvar' : 'Cadastrar'}" 
+				action="#{TarefaBean.salvar}"/>
+				
+				<p:commandButton 
+					id="buttonListarTarefas" 
+					value="Visualizar tarefas" 
+					action="#{TarefaBean.listar}"
+					ajax="false" 
+					rendered="#{!TarefaBean.modoEdicao}"
+					style="margin-left: 2em" immediate="true"/>
+			</div>
+		
+		</h:form>
+		
+	
+	</h:body>
+</html>

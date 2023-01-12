@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//PT" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">	
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Lista de Tarefas</title>
+		
+		<style>
+		    body .ui-panelgrid .ui-panelgrid-cell {
+		            background-color: transparent;
+		        }
+	
+		        .heading-row {
+		            background-color: var(--surface-c);
+		            font-weight: bold;
+		        }
+		</style>
+	</h:head>
+	
+	<h:body>
+		
+		<div class="card">
+		
+			<h:form id="formFiltro">
+			 
+				<div class="card" align="center">
+				
+				    <p:panelGrid columns="2"
+				                 columnClasses="ui-grid-col-2"
+				                 layout="grid"
+				                 styleClass="ui-panelgrid-blank ui-fluid"
+				                 style="border:0px none; margin-rigth: 0;">
+				                 
+						<p:row styleClass="heading-row">
+				            Filtrar
+				        </p:row>
+				        
+				        <p:outputLabel value="Número: " for="tarefaId"/>
+						<p:inputText value="#{TarefaBean.tarefa.id}" id="tarefaId"/>
+				        
+		        		<p:outputLabel value="Título/descrição: " for="titulo"/>
+						<p:inputText value="#{TarefaBean.tarefa.titulo}" id="titulo"/>
+				
+						<p:row>
+			                
+			                <p:outputLabel value="Responsável: "/>
+							<p:selectOneMenu value="#{TarefaBean.idResponsavelSelecionado}">
+								<f:selectItems
+									id="responsavel"
+									value="#{TarefaBean.responsaveis}"
+									var="resp"
+									itemLabel="#{resp.nome}"
+									itemValue="#{resp.id}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Situação: "/>
+							<p:selectOneMenu value="#{TarefaBean.situacao}">
+								<f:selectItem itemLabel="Em andamento" itemValue="emAndamento"/>
+                    			<f:selectItem itemLabel="Concluída" itemValue="concluida"/>
+							</p:selectOneMenu>
+							
+							<p:commandButton 
+								styleClass="ui-button-secondary"
+								icon="pi pi-search" 
+								update="formFiltro form" 
+								id="buttonFiltro" 
+								actionListener="#{TarefaBean.filtrar}"
+								value="Buscar tarefas"/>
+								
+							<p:commandButton 
+								styleClass="ui-button-danger"
+								icon="pi pi-times" 
+								update="formFiltro form" 
+								id="buttonLimparFiltro" 
+								actionListener="#{TarefaBean.limparFiltro}"
+								value="Limpar filtro"/>
+				        </p:row>
+				        
+		    		</p:panelGrid>
+				</div>
+			
+			</h:form>
+		
+		    <h:form id="form">
+		    
+		        <p:dataTable id="tarefas" var="tarefa" value="#{TarefaBean.tarefas}" rowKey="#{tarefa.id}"
+		                     selection="#{TarefaBean.tarefa}" selectionMode="single"
+		                     rowClasses="#{tarefa.concluida ? 'table-hide-row': 'table-show-row'}">
+                    <p:ajax event="page" process="@this" update="form"/>
+		            <f:facet name="header">
+		                <h2>Tarefas</h2>
+		            </f:facet>
+	
+		            <p:column headerText="Número">
+		                <h:outputText value="#{tarefa.id}" />
+		            </p:column>
+		            <p:column headerText="Título">
+		                <h:outputText value="#{tarefa.titulo}" />
+		            </p:column>
+		            <p:column headerText="Responsável">
+		                <h:outputText value="#{tarefa.responsavel.nome}" />
+		            </p:column>
+		            <p:column headerText="Deadline">
+		                <h:outputText value="#{tarefa.deadline}" />
+		            </p:column>
+		            
+		            <p:column headerText="Ações">
+                		<p:commandButton 
+                		id="botaoEditar"
+                		style="margin-right: 1.0em" 
+                		icon="pi pi-pencil" 
+                		styleClass="rounded-button ui-button-primary"
+                		action="#{TarefaBean.editar}"
+                		actionListener="#{TarefaBean.listenerTarefa}">
+                			<f:attribute name="tarefa" value="#{tarefa}" />
+                			<f:setPropertyActionListener value="#{tarefa}" target="#{TarefaBean.tarefa}"/>
+                			<p:tooltip 
+					        	id="tooltipEditar" 
+					        	position="top"
+			                    for="botaoEditar"
+			                    value="Editar tarefa"/>
+                		</p:commandButton>
+                		
+                		<p:growl id="message" showDetail="true"/>
+		            	
+		            	<p:commandButton 
+		            		id="botaoExcluir"
+			                action="#{TarefaBean.deletar}"
+			                update="form"
+			                icon="pi pi-times" 
+			                styleClass="rounded-button ui-button-danger"
+			                style="margin-right: 1.0em;">
+			                	<f:setPropertyActionListener value="#{tarefa}" target="#{TarefaBean.tarefa}"/>
+					            <p:confirm header="Confirmação" message="Deseja excluir esta tarefa?" icon="pi pi-info-circle"/>
+					            <p:tooltip 
+						        	id="tooltipExcluir" 
+						        	position="top"
+				                    for="botaoExcluir"
+				                    value="Excluir tarefa"/>
+				        </p:commandButton>
+				        
+				        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+				            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+				            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"/>
+				        </p:confirmDialog>
+				        
+				        <p:commandButton 
+				        id="botaoConcluir" 
+				        action="#{TarefaBean.concluirTarefa}"
+				        update="form formFiltro"
+				        icon="pi pi-check"
+				        styleClass="rounded-button ui-button-success"
+				        rendered="#{!tarefa.concluida}">
+				        	<f:setPropertyActionListener value="#{tarefa}" target="#{TarefaBean.tarefa}"/>
+				        	<p:tooltip 
+					        	id="tooltipConcluir" 
+					        	position="top"
+			                    for="botaoConcluir"
+			                    value="Concluir tarefa"/>
+				        </p:commandButton>
+				        
+				        
+		            </p:column>
+		            
+		        </p:dataTable>
+		
+		    </h:form>
+		</div>
+		
+	</h:body>
+
+</html>
