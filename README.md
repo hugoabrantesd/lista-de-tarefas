@@ -15,4 +15,4 @@ E) Realizar um filtro por vários campos.
 + PostgreSQL
 + Apache TomCat 9.0
 
-### Com a IDE devidamente configurada e o projeto aberto, é só rodar.
+- Com a IDE devidamente configurada e o projeto aberto, é só rodar.
