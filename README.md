@@ -4,11 +4,11 @@
 Um sistema simples para gerencimanento de tarefas, desenvolvido com Java e JSF (Java Server Faces).
 
 ## Requisitos funcionais do sistema:
-A) Criar uma tarefa;
-B) Atualizar uma tarefa;
-C) Remover uma tarefa;
-D) Listar as tarefas;
-E) Realizar um filtro por vários campos.
+<p>A) Criar uma tarefa;<p/>
+<p>B) Atualizar uma tarefa;<p/>
+<p>C) Remover uma tarefa;<p/>
+<p>D) Listar as tarefas;<p/>
+<p>E) Realizar um filtro por vários campos.<p/>
 
 ### Requisitos:
 + Java 8+
