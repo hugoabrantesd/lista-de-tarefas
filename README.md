@@ -1,4 +1,4 @@
-# lista-de-tarefas
+# Lista de Tarefas
 
 ## Sobre o projeto
 Um sistema simples para gerencimanento de tarefas, desenvolvido com Java e JSF (Java Server Faces).
